@@ -1036,9 +1036,9 @@
           <div class="social-login">
             <div class="social-title">O continúa con</div>
             <div class="social-btns">
-              <div class="social-btn google-btn">
-                <i class="fab fa-google"></i> Google
-              </div>
+<div class="social-btn google-btn" onclick="loginConGoogle()">
+  <i class="fab fa-google"></i> Google
+</div>
               <div class="social-btn facebook-btn">
                 <i class="fab fa-facebook-f"></i> Facebook
               </div>
@@ -1442,6 +1442,54 @@ async function obtenerPartidosReales() {
       obtenerPartidosReales();
     });
   </script>
-  
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+
+<script type="module">
+  // Importaciones necesarias desde Firebase SDK v9+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
+
+  // Tu configuración de Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCUnLxeth_ELV4C-L2SFHhxPJfOoy0lGW0",
+    authDomain: "streamsport-5bc1f.firebaseapp.com",
+    projectId: "streamsport-5bc1f",
+    storageBucket: "streamsport-5bc1f.firebasestorage.app",
+    messagingSenderId: "1009944497547",
+    appId: "1:1009944497547:web:0a934adcb7e65873c4738e",
+    measurementId: "G-4D1NPJZE49"
+  };
+
+  // Inicialización
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // Función global para que tu botón la llame
+  window.loginConGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        alert("¡Bienvenido, " + user.displayName + "!");
+        console.log("Usuario logueado:", user);
+
+        // Puedes personalizar el DOM aquí si quieres mostrar nombre o avatar
+        document.querySelector('.user-name').textContent = user.displayName;
+        document.querySelector('.user-avatar').textContent = user.displayName.charAt(0).toUpperCase();
+        document.getElementById('auth-modal').classList.remove('active');
+        document.getElementById('show-login').classList.add('hidden');
+        document.getElementById('user-profile').classList.add('active');
+      })
+      .catch((error) => {
+        console.error("Error al iniciar sesión con Google:", error.message);
+        alert("Error al iniciar sesión: " + error.message);
+      });
+  };
+</script>
+
+
 </body>
 </html>
